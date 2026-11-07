@@ -7,9 +7,9 @@
 
 <table>
   <tr>
-    <td><img src="images/hardware/hw_01_k27_compressor_housing.jpg" alt="Real K27 compressor housing" width="100%"></td>
-    <td><img src="images/cad/cad_01_assembly_iso.png" alt="Reconstructed K27 CAD assembly" width="100%"></td>
-    <td><img src="images/results/res_08_b2_trajectories.png" alt="CFD flow trajectories, run B2" width="100%"></td>
+    <td><img src="images/hardware/hw_01_k27_compressor_housing.jpeg" alt="Real K27 compressor housing" width="80%"></td>
+    <td><img src="images/cad/cad_01_exploded.png" alt="Reconstructed K27 CAD assembly" width="100%"></td>
+    <td><img src="images/results/res_08_b2_trajectories.png" alt="CFD flow trajectories, run B2" width="150%"></td>
   </tr>
   <tr>
     <td><em>The real K27 compressor housing.</em></td>
@@ -41,8 +41,8 @@ I did not start on the K27. I first debugged the rotating-flow setup on a generi
 | Item | Result |
 |---|---|
 | Geometry | Compressor housing and impeller rebuilt from measurements: 14 blades (7 + 7 splitters), 78.5 mm exit diameter |
-| Run B1 (about 33,400 rpm) | All goals converged. Mass flow balances within 0.2%, and shaft power matches fluid enthalpy gain within about 1% |
-| Run B2 (about 100,300 rpm) | Preliminary, not fully converged. Blade tip speed is about 1.2 times the ambient speed of sound |
+| Run B1 (33,400 rpm) | All goals converged. Mass flow balances within 0.2%, and shaft power matches fluid enthalpy gain within about 1% |
+| Run B2 (100,300 rpm) | Preliminary, not fully converged. Blade tip speed is about 1.2 times the ambient speed of sound |
 | Compressor map | Preliminary map from a parametric sweep, forward flow only |
 | ANSYS CFX | Model setup and meshing underway |
 
@@ -94,13 +94,13 @@ This is an individual project. My work included:
 
 | Dimension | Value | Source |
 |---|---|---|
-| Impeller exit diameter | about 78.5 mm | Measured |
-| Inducer tip diameter | about 52 mm | Measured |
+| Impeller exit diameter | 78.5 mm | Measured |
+| Inducer tip diameter | 52 mm | Measured |
 | Impeller blades | 7 main + 7 splitters (14 total) | Counted on the real impeller |
 | Tip clearance | about 0.5 mm | Measured |
-| Housing inlet diameter | about 93 mm | Measured |
-| Housing outlet diameter | about 50 mm | Measured |
-| Inlet recirculation slot (annular) | about 2.5 mm wide | From the CAD |
+| Housing inlet diameter | 93 mm | Measured |
+| Housing outlet diameter | 50 mm | Measured |
+| Inlet recirculation slot (annular) | 2.5 mm wide | Measured |
 | Diffuser | Vaneless | Observed |
 | Blade profile | Estimated | Compared against the real impeller |
 
@@ -108,10 +108,10 @@ This is an individual project. My work included:
 
 The center housing (bearings, lubrication passages) was not reconstructed, since it does not affect the gas path. The turbine side was modeled for geometry only and has not been simulated.
 
-![Exploded view of the reconstructed K27](images/cad/cad_04_exploded.png)
-*Exploded view of the reconstructed K27.*
+![Exploded view of the reconstructed K27](images/cad/cad_01_exploded.png)
+*Exploded view of the reconstructed K27 (Compressor side).*
 
-The STEP files are in [`models/`](models/): the full assembly and the impeller separately.
+The STEP files are in [`models/`](models/): the full assembly and the compressor assembly.
 
 ---
 
@@ -145,7 +145,7 @@ The STEP files are in [`models/`](models/): the full assembly and the impeller s
 *Analysis tree with the boundary conditions, rotating region and goals.*
 
 ![Mesh cut plane with impeller close-up](images/setup/setup_05_mesh_cut_plane.png)
-*Mesh on a cut plane through the impeller, with the clearance region in view.*
+*Mesh on a cut plane through the impeller.*
 
 ---
 
