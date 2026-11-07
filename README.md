@@ -7,9 +7,9 @@
 
 <table>
   <tr>
-    <td><img src="images/hardware/hw_01_k27_compressor_housing.jpeg" alt="Real K27 compressor housing" width="80%"></td>
+    <td><img src="images/hardware/hw_01_k27_compressor_housing.jpeg" alt="Real K27 compressor housing" width="70%"></td>
     <td><img src="images/cad/cad_01_exploded.png" alt="Reconstructed K27 CAD assembly" width="100%"></td>
-    <td><img src="images/results/res_08_b2_trajectories.png" alt="CFD flow trajectories, run B2" width="150%"></td>
+    <td><img src="images/results/res_08_b2_trajectories.png" alt="CFD flow trajectories, run B2" width="100%"></td>
   </tr>
   <tr>
     <td><em>The real K27 compressor housing.</em></td>
@@ -26,9 +26,7 @@ This repository documents my CFD study of the compressor of a BorgWarner K27 tur
 
 <!-- CONFIRM: add one line on the academic context only if you want it public (e.g. developed at UPQ as an individual project, with advisor names if they agree) -->
 
-I did not start on the K27. I first debugged the rotating-flow setup on a generic practice model, then moved to the K27 geometry. SolidWorks Flow Simulation can't combine its high-Mach option with rotation, so the high-speed work is moving to ANSYS.
-
-<!-- CONFIRM: check this limitation against the Flow Simulation help for your version (2026) before publishing; it appears again in the ANSYS section -->
+I did not start on the K27. I first debugged the rotating-flow setup on a generic practice model, then moved to the K27 geometry. SolidWorks Flow Simulation can't combine its high-Mach option with rotation, so the high-speed work is moving to ANSYS. The stage 1 results are preliminary, and the reasons are explained in [Why the stage 1 results are preliminary](#why-the-stage-1-results-are-preliminary).
 
 **What this repository shows**
 - Reverse engineering: measuring a real turbocharger and rebuilding its flow geometry in CAD
@@ -41,12 +39,13 @@ I did not start on the K27. I first debugged the rotating-flow setup on a generi
 | Item | Result |
 |---|---|
 | Geometry | Compressor housing and impeller rebuilt from measurements: 14 blades (7 + 7 splitters), 78.5 mm exit diameter |
-| Run B1 (33,400 rpm) | All goals converged. Mass flow balances within 0.2%, and shaft power matches fluid enthalpy gain within about 1% |
-| Run B2 (100,300 rpm) | Preliminary, not fully converged. Blade tip speed is about 1.2 times the ambient speed of sound |
-| Compressor map | Preliminary map from a parametric sweep, forward flow only |
+| Run B1 (about 33,400 rpm) | All goals converged. Mass flow balances within 0.2%, and shaft power matches fluid enthalpy gain within about 1% |
+| Run B2 (about 100,300 rpm) | Preliminary, not fully converged. Blade tip speed is about 1.2 times the ambient speed of sound |
+| Compressor map | Preliminary map from a parametric sweep, forward flow only. It has features that are not physical (see the compressor map section) |
+| Main limitation | Estimated impeller blade profile and no high-Mach treatment with rotation, so the stage 1 results are preliminary |
 | ANSYS CFX | Model setup and meshing underway |
 
-<!-- CONFIRM: the 48-point map in the compressor map section; check the point count and speed range against the final sweep -->
+<!-- CONFIRM: the number of design points in the compressor map section (the plot labels reach DP51 and about 35 forward-flow points are plotted); check the point count and speed range against the final sweep -->
 
 ## My role
 
@@ -97,21 +96,20 @@ This is an individual project. My work included:
 | Impeller exit diameter | 78.5 mm | Measured |
 | Inducer tip diameter | 52 mm | Measured |
 | Impeller blades | 7 main + 7 splitters (14 total) | Counted on the real impeller |
-| Tip clearance | about 0.5 mm | Measured |
+| Tip clearance | about 0.5 mm | Measured on CAD |
 | Housing inlet diameter | 93 mm | Measured |
 | Housing outlet diameter | 50 mm | Measured |
 | Inlet recirculation slot (annular) | 2.5 mm wide | Measured |
 | Diffuser | Vaneless | Observed |
 | Blade profile | Estimated | Compared against the real impeller |
 
-<!-- CONFIRM: that each "Measured" label is accurate (including the three rows added in this version); change to "Estimated" for anything you could not measure directly -->
 
 The center housing (bearings, lubrication passages) was not reconstructed, since it does not affect the gas path. The turbine side was modeled for geometry only and has not been simulated.
 
 ![Exploded view of the reconstructed K27](images/cad/cad_01_exploded.png)
-*Exploded view of the reconstructed K27 (Compressor side).*
+*Exploded view of the reconstructed K27.*
 
-The STEP files are in [`models/`](models/): the full assembly and the compressor assembly.
+The STEP files are in [`models/`](models/): the full assembly and the compressor assembly. The impeller in both is the preliminary version described above.
 
 ---
 
@@ -145,7 +143,7 @@ The STEP files are in [`models/`](models/): the full assembly and the compressor
 *Analysis tree with the boundary conditions, rotating region and goals.*
 
 ![Mesh cut plane with impeller close-up](images/setup/setup_05_mesh_cut_plane.png)
-*Mesh on a cut plane through the impeller.*
+*Mesh on a cut plane through the impeller, with the clearance region in view.*
 
 ---
 
@@ -157,6 +155,8 @@ Two runs on the reconstructed K27, both at free delivery.
 |---|---|---|
 | B1 | 3,500 rad/s (about 33,400 rpm) | Started from scratch, 1,000 iterations, all goals converged |
 | B2 | 10,500 rad/s (about 100,300 rpm) | Restarted from B1, 670 iterations, not fully converged |
+
+In both runs the outlet opens to environment pressure (free delivery), with no pipe, valve or back pressure. The impeller is free to pass as much air as it can, so each run sits at the maximum-flow end of its speed line: high mass flow, a pressure ratio close to 1, and low efficiency. The impeller still does shaft work, but with no pressure to push against, that work ends up as air velocity and heat instead of pressure rise. That is why the temperature rises so much more than the pressure. A compressor on an engine works against back pressure, so it operates at higher pressure ratios and lower flow. The compressor map further down covers that range.
 
 ### Run B1
 
@@ -208,10 +208,17 @@ Two runs on the reconstructed K27, both at free delivery.
     <td><img src="images/results/res_10_b2_goals_convergence.png" alt="B2 goal convergence" width="100%"></td>
   </tr>
   <tr>
-    <td><em>B1: goals settle and are reported as achieved.</em></td>
-    <td><em>B2: mass flow, inlet temperature and pressure ratio had not fully settled when the run was stopped.</em></td>
+    <td><em>B1: mass flow, total pressure, total temperature and torque against iteration. The goals settle and are reported as achieved.</em></td>
+    <td><em>B2: same goals against iteration. Mass flow, inlet temperature and pressure ratio had not fully settled when the run was stopped.</em></td>
   </tr>
 </table>
+
+<!-- ADD: goal summary table from the Excel export of the goal plots, one row per goal, for example:
+| Goal | B1 final value | B1 spread, last 100 iterations | B2 final value | B2 spread, last 100 iterations |
+|---|---|---|---|---|
+| Inlet mass flow | ... | ... | ... | ... |
+Spread = (max - min) / mean over the last 100 iterations, as a percentage. -->
+
 
 ---
 
@@ -243,19 +250,27 @@ The derived efficiency is T01 x (PR^((gamma-1)/gamma) - 1) / (total temperature 
 ## Compressor map (SolidWorks Flow Simulation)
 
 ![Preliminary K27 compressor map](images/results/res_11_compressor_map_sw.png)
-*Preliminary compressor map from the parametric sweep. Forward-flow points only.*
+*Preliminary compressor map from the parametric sweep. Forward-flow points only. Points with an inlet mass flow below 0.02 kg/s are kept but flagged as near-reversal edges (the DP labels), and reversed-flow points are excluded. The pressure ratio is taken at the end of the outlet pipe, so it includes the pipe's losses.*
 
 | Item | Setting |
 |---|---|
 | Method | Parametric sweep at constant speed, varying the static pressure at the end of the outlet pipe |
-| Design points | 48 |
-| Speed range | 50,000 to 150,000 rpm |
+| Speed lines | Six: 50, 70, 90, 110, 130 and 150 krpm |
+| Design points | Several per speed line; reversed-flow points are excluded from the plot |
 | Domain | Full 360 degree wheel, ambient inlet, 150 mm long, 50 mm diameter outlet pipe added |
 | Mesh | About 400,000 cells, about 100,000 in contact with solids |
 
 <!-- CONFIRM: sweep details (points, speeds, mesh) come from your earlier notes; check them against the final runs -->
 
 The data behind the plot is in [`data/compressor_map_sw.csv`](data/compressor_map_sw.csv).
+
+**Features that are not physical**
+- On the higher speed lines, the points closest to free delivery bend back toward lower mass flow as the pressure ratio drops. Mass flow should keep rising toward choke as the back pressure falls.
+- Speed lines cross each other where those bent-back branches pass through the lower-speed lines. Speed lines on a real map do not cross.
+- The low-speed lines have only two to four points, because the near-reversal and reversed-flow points were excluded.
+- There are no efficiency contours yet.
+
+**Likely contributors (not isolated).** The estimated impeller blade profile, the missing high-Mach treatment, and the coarse mesh and rotating interface (all explained in the next section). I have not separated their effects, so I treat the map as a qualitative preliminary result and not as a performance prediction. The ANSYS stage is the test of whether they explain these features.
 
 **Reference.** No official K27 map exists, so I compare against a third-party approximate map (peak efficiency about 77%). It is an approximation, not validation data.
 
@@ -264,9 +279,21 @@ The data behind the plot is in [`data/compressor_map_sw.csv`](data/compressor_ma
 
 ---
 
+## Why the stage 1 results are preliminary
+
+Three things limit the SolidWorks stage. In my judgment the first is the largest, but I have not tested that.
+
+1. **Impeller geometry.** The blade profile is an estimate, compared against the real impeller by eye and not scanned or measured. Compressor performance depends strongly on blade angles and shape, so a different profile can change the pressure ratio, flow range and efficiency a lot. The impeller will be redesigned with the ANSYS turbomachinery tools (BladeGen or Vista CCD) to represent the K27 impeller more accurately. Every result in this stage is a result for my preliminary impeller, not for the real K27.
+2. **No high-Mach option with rotation.** Flow Simulation's high-Mach option can't be used with a local rotating region. At 100,300 rpm the blade tip speed is about 1.2 times the speed of sound, so the flow is transonic, and the solver warned about supersonic flow in some of the practice-model runs. Flow Simulation recommends its high-Mach option for flows above about Mach 3 in steady-state analyses, so the standard solver is what it expects here. Even so, shocks and compressibility effects are handled less reliably than in a solver built for turbomachinery.
+3. **Mesh and rotating interface.** Flow Simulation uses a Cartesian-based mesh with limited local control. ANSYS allows sizing by body and face, inflation layers and a dedicated turbomachinery mesh. The interface between the rotating region and the stationary domain, and the thin clearance around the impeller, are not resolved as finely here as they can be in ANSYS.
+
+Because of these limits, the stage 1 results show trends and consistency checks, not quantitative performance.
+
+---
+
 ## ANSYS stage (in progress)
 
-SolidWorks Flow Simulation does not allow the high-Mach-number option together with rotation. At 10,500 rad/s the blade tip speed is about 1.2 times the speed of sound, so the relative flow can be transonic and the setup cannot treat it properly. This stage moves the same geometry to ANSYS for compressible flow in rotating regions.
+SolidWorks Flow Simulation does not allow its high-Mach-number option together with a local rotating region. At 10,500 rad/s the blade tip speed is about 1.2 times the speed of sound, so the relative flow can be transonic. This stage moves the same geometry to ANSYS CFX, which handles compressible flow in rotating regions.
 
 <table>
   <tr>
@@ -303,6 +330,13 @@ An inflation layer on the impeller volume was tried and did not improve the mesh
 - [ ] Mesh independence study
 - [ ] Rebuild the impeller blade profile (BladeGen / Vista CCD) and compare it against the SolidWorks wheel
 - [ ] Compare the map against the reference
+
+### Future work
+
+After the compressor impeller is redone with the ANSYS turbomachinery tools:
+- Rebuild the turbine wheel the same way (BladeGen / Vista CCD).
+- Simulate the turbine side with the rebuilt wheel.
+- If the student license and my hardware allow it, simulate the full turbocharger with compressor and turbine coupled, so the shaft speed comes from the power balance instead of being imposed.
 
 ---
 
@@ -351,8 +385,9 @@ Before the K27, I used a generic turbocharger CAD from GrabCAD (impeller about 6
 - **Exact variant unknown.** There are no official K27 specifications, so the geometry comes from my own measurements.
 - **Steady state only.** No impeller and volute unsteady interaction.
 - **Compressor only.** The turbine, bearings and engine are not simulated. Speed is imposed, not obtained from a power balance with the turbine.
-- **Run B2 not fully converged.** Inlet temperature, mass flow, inlet enthalpy rate and pressure ratio had not fully settled, so B2 is a preliminary high-speed point.
 - **Software limit.** High-Mach treatment and rotation can't be combined in Flow Simulation, which is why the study continues in ANSYS.
+- **Stage 1 mesh and interface.** Flow Simulation's mesh control is limited, and the rotating-to-stationary interface is not resolved as finely as it can be in ANSYS.
+- **The compressor map is qualitative.** It has features that are not physical (see the compressor map section), so it should not be read as a performance prediction.
 - **ANSYS interface and mesh.** The impeller-to-volute interface and the mesh quality at the impeller hub and shroud are still being worked on, so no ANSYS results are published yet.
 
 ---
@@ -361,7 +396,7 @@ Before the K27, I used a generic turbocharger CAD from GrabCAD (impeller about 6
 
 ```
 ├── README.md
-├── models/     K27 assembly and impeller (STEP)
+├── models/     K27 full assembly and compressor assembly (STEP)
 ├── data/       Compressor map data (CSV)
 └── images/
     ├── hardware/   Photos of the real K27
