@@ -297,8 +297,8 @@ SolidWorks Flow Simulation does not allow its high-Mach-number option together w
 
 <table>
   <tr>
-    <td><img src="images/ansys/ansys_01_fluid_domains.png" alt="Three fluid bodies in ANSYS" width="100%"></td>
-    <td><img src="images/ansys/ansys_02_mesh_overview.png" alt="ANSYS mesh overview" width="100%"></td>
+    <td><img src="images/ansys/prerun/ansys_01_fluid_domains.png" alt="Three fluid bodies in ANSYS" width="100%"></td>
+    <td><img src="images/ansys/prerun/ansys_02_mesh_overview.png" alt="ANSYS mesh overview" width="100%"></td>
   </tr>
   <tr>
     <td><em>Internal fluid volume split into three bodies: inlet, impeller (kept at 360 degrees) and volute.</em></td>
